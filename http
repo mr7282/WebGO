@@ -1,0 +1,17 @@
+1. REQUEST LINE
+
+GET / HTTP /1.1
+
+2. Headers
+Host: ya.ru
+User-Agent: Mozilla/5.0
+Accept: text/html
+Connection: keeplive
+Content-Encoding: gzip
+
+3. Body
+
+base64
+>30%
+
+POST / HTTP/1.1
