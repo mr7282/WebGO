@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	// "io"
+	"io/ioutil"
 	"fmt"
 	// "os"
 	"log"
@@ -18,8 +18,16 @@ func testSearch(searchQuery string, whereSearch []string) {
 	}
 }
 
-func openURL(url) {
-	get Url
+func openURL(url string) []byte {
+	getUrl, err := http.Get(url)
+	if err != nil {
+		log.Println(err)
+	}
+	defer getUrl.Body.Close()
+
+	return getUrl.Body
+
+
 }
 
 
