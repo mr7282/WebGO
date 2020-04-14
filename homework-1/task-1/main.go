@@ -6,6 +6,7 @@ import (
 	"fmt"
 	// "os"
 	"log"
+	"bytes"
 )
 
 // Напишите функцию, которая будет получать на вход строку с поисковым запросом (string) и массив ссылок на страницы, по которым стоит
@@ -13,33 +14,37 @@ import (
 // поисковый запрос. Функция должна искать точное соответствие фразе в тексте ответа от сервера по каждой из ссылок. 
 
 func testSearch(searchQuery string, whereSearch []string) {
+	var includes []string
+	lenQuery := len(searchQuery)
+	queryByte := []byte(searchQuery)
 	for	_, url := range whereSearch {
-		openURL(url)
+		arrByte := openURL(url)
+		for i := 0; i >= len(arrByte) ; i++ {
+			if bytes.Equal(arrByte[i:lenQuery], []byte(searchQuery)) {
+				includes = append(includes, url)
+				break
+			}
+		}
 	}
+	return includes
 }
 
 func openURL(url string) []byte {
-	getUrl, err := http.Get(url)
+	getURL, err := http.Get(url)
 	if err != nil {
 		log.Println(err)
 	}
-	defer getUrl.Body.Close()
+	defer getURL.Body.Close()
 
-	return getUrl.Body
-
-
+	openURL, err := ioutil.ReadAll(getURL.Body)
+	if err != nil {
+		log.Println(err)
+	}
+	return openURL
 }
-
 
 func main() {
 
-	resp, err := http.Get("https://golang.org/")
-	if err != nil {
-		log.Print(err)
-		return
-	}
-	defer resp.Body.Close()
-
-	fmt.Println(resp.Status)
-	
+		testSearch("возвращает", ["https://ru.stackoverflow.com/questions/853566/golang-сравнить-слайсы-байт-полученные-из-16-ричных-строк", "https://golang.org/pkg/io/ioutil/" ])
+	// fmt.Println(openURL("https://golang.org"))
 }
