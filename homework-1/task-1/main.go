@@ -13,10 +13,10 @@ import (
 // произвести поиск ([]string). Результатом работы функции должен быть массив строк со ссылками на страницы, на которых обнаружен 
 // поисковый запрос. Функция должна искать точное соответствие фразе в тексте ответа от сервера по каждой из ссылок. 
 
-func testSearch(searchQuery string, whereSearch []string) {
+func testSearch(searchQuery string, whereSearch []string) []string{
 	var includes []string
 	lenQuery := len(searchQuery)
-	queryByte := []byte(searchQuery)
+	// queryByte := []byte(searchQuery)
 	for	_, url := range whereSearch {
 		arrByte := openURL(url)
 		for i := 0; i >= len(arrByte) ; i++ {
@@ -45,6 +45,6 @@ func openURL(url string) []byte {
 
 func main() {
 
-		testSearch("возвращает", ["https://ru.stackoverflow.com/questions/853566/golang-сравнить-слайсы-байт-полученные-из-16-ричных-строк", "https://golang.org/pkg/io/ioutil/" ])
-	// fmt.Println(openURL("https://golang.org"))
+		
+	fmt.Println(testSearch("Golang сравнить", []string{"https://ru.stackoverflow.com/questions/853566/golang-сравнить-слайсы-байт-полученные-из-16-ричных-строк", "https://golang.org/pkg/io/ioutil/"}))
 }
