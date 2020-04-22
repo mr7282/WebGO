@@ -8,7 +8,6 @@ import (
 
 // Напишите два роута: один будет записывать информацию в Cookie (например, имя), а второй — получать ее и выводить в ответе на запрос.
 
-// https://docs.google.com/document/d/1NdWh7wMM0hrgZbarOwaQsAskCN7AiygE4pRl9WzyD_k/edit#
 
 func main() {
 	route := http.NewServeMux()
@@ -18,16 +17,18 @@ func main() {
 }
 
 func setCookie(wr http.ResponseWriter, req *http.Request) {
-	req.AddCookie(&http.Cookie{Name: "set my coockie"})
+	myCookie := http.Cookie{Name:"myCookie", Value:"information"}
+	http.SetCookie(wr, &myCookie)
 	wr.Write([]byte("set cookie"))
 }
 
 func getCookie(wr http.ResponseWriter, req *http.Request) {
-	myCookie, err := req.Cookie("Name")
-	if err != nil {
+	reqCookie, err := req.Cookie("myCookie")
+	if err!= nil {
 		log.Fatal(err)
 	}
-	wr.Write([]byte(myCookie.Name))
+	wr.Write([]byte("Cookie:" + reqCookie.Value))
+         
 }
 
 
