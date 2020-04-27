@@ -35,18 +35,13 @@ var myBlog = BlogList{
 	},
 }
 
-var tmpl = template.Must(template.New("myBlog").ParseFiles("./www/templates/tmpl.html"))
+
 
 func main() {
 	route := http.NewServeMux()
-	route.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
-	route.HandleFunc("/", viewBlog)
+	
 
 	log.Fatal(http.ListenAndServe(":8080", route))
 }
 
-func viewBlog(wr http.ResponseWriter, r *http.Request) {
-	if err := tmpl.ExecuteTemplate(wr, "Blog", myBlog); err != nil {
-		log.Println(err)
-	}
-}
+
