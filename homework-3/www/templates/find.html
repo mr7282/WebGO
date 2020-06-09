@@ -1,0 +1,59 @@
+{{define "Find"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{.Name}}</title>
+    {{template "head"}}
+</head>
+<body>
+    <nav class="menu">
+        <div class="elem"><a href="/index">МОЙ БЛОГ</a></div>
+        <div class="elem"><a href="/find">ПОИСК</a></div>
+        <div class="elem"><a href="/create">СОЗДАТЬ ПОСТ</a></div>
+        <div class="elem"><a href="/edit">РЕДАКТИРОВАТЬ</a></div>
+    </nav>
+
+    <form onsubmit="call()">
+        <div class="findString"> НАЙТИ ПОСТ:
+            <input type="text" id="findString" name="Find" placeholder="Введите номер поста">
+           <button type="submit">Найти</button>
+        </div>
+    </form>
+
+    <div class="post">
+        <div class="id">Номер поста: {{.Find.ID}}</div>
+        <div class="name">{{.Find.Name}}</div>
+        <div class="body">{{.Find.Post}}</div>
+    </div>
+
+    <script>
+        function call() {
+        setTimeout(() => {
+            document.location.reload()
+        }, 5);
+        postFindReqest()
+
+        function postFindReqest() {
+            let findString = document.getElementById('findString').value;
+            fetch("/find/post", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(findString)
+            });
+        };
+    };
+    </script>
+</body>
+</html>
+{{end}}
+
+{{define "head"}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/css/style.css" />
+{{end}}
+
+
+

@@ -1,0 +1,47 @@
+{{define "Blog"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{.Name}}</title>
+    {{template "head"}}
+</head>
+<body>
+    <nav class="menu">
+        <div class="elem"><a href="/index">МОЙ БЛОГ</a></div>
+        <div class="elem"><a href="/find">ПОИСК</a></div>
+        <div class="elem"><a href="/create">СОЗДАТЬ ПОСТ</a></div>
+        <div class="disable elem"><a href="#">РЕДАКТИРОВАТЬ</a></div>
+    </nav>
+    
+    <form class="createForm" onsubmit="createPost()">
+        <input class="text" type="text" id="namePost" name="Name" placeholder=" Введите название поста...">
+        <textarea class="text" type="textarea" id="post" name="post" placeholder=" Введите текст поста..."></textarea>
+        <input class="buttonCreate" type="submit" value="Создать пост">
+    </form>
+
+    <script>
+        function createPost() {
+            let NewPost = {
+                NamePost: document.getElementById("namePost").value,
+                TextPost: document.getElementById("post").value,
+            };
+            alert("Пост добавлен");
+            fetch("/create/post", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(NewPost)
+            });
+        };
+    </script>
+</body>
+</html>
+{{end}}
+
+{{define "head"}}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css" />
+
+{{end}}

@@ -1,0 +1,56 @@
+{{define "Blog"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Редактирование</title>
+    {{template "head"}}
+</head>
+<body onload="initEditPost()">
+    <nav class="menu">
+        <div class="elem"><a href="/index">ЛОГОС</a></div>
+        <div class="elem"><a href="/create">СОЗДАТЬ ПОСТ</a></div>
+        <div class="elem"><a href="/find">АВТОРЫ</a></div>
+    </nav>
+    
+    <form class="editForm" onsubmit="editPost()">
+        <input type="hidden" id="ID" name="ID">
+        <input class="text" type="text" id="namePost" name="namePost" placeholder="Введите название поста...">
+        <textarea class="text" type="textarea" id="post" name="post" placeholder="Введите текст поста..."></textarea>
+        <input class="buttonCreate" type="submit" value="Исправить">
+    </form>
+
+    <script>
+        function initEditPost() {
+            document.getElementById("ID").value = "{{.ID}}"
+            document.getElementById("namePost").value = "{{.Name}}"
+           document.getElementById("post").value = "{{.Post}}"
+        };
+
+
+        function editPost() {
+            alert("Пост исправлен")
+            let NewPost = {
+                ID: +document.getElementById("ID").value,
+                Name: document.getElementById("namePost").value,
+                Post: document.getElementById("post").value,
+            };
+
+            fetch("/editPost", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(NewPost)
+            })
+        };
+    </script>
+</body>
+</html>
+{{end}}
+
+{{define "head"}}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fontawesome-free-5.13.0-web/fontawesome-free-5.13.0-web/css/all.css"/>
+{{end}}

@@ -1,0 +1,78 @@
+{{define "Blog"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{.Title}}</title>
+    {{template "head"}}
+</head>
+<body>
+    <nav class="menu">
+        <div class="elem"><a href="/index">ЛОГОС</a></div>
+        <div class="elem"><a href="/create">СОЗДАТЬ ПОСТ</a></div>
+        <div class="elem"><a href="/find">АВТОРЫ</a></div>
+    </nav>
+    <h1>ЛОГОС</h1>
+
+    <form onsubmit="call()">
+        <div class="findString"> НАЙТИ ПОСТ:
+            <input type="text" id="findString" name="Find" placeholder="Введите номер поста">
+           <button type="submit">Найти</button>
+        </div>
+    </form>
+
+    <div id="posts">
+        {{range .Slice}}
+        <div class="post" id="{{.Post.ID}}">
+            <div class="id">
+                <div>
+                    <span>Автор: {{.UserName}}</span>
+                </div>
+                <div style="display: flex;">
+                    <span>Дата: {{.CreatedAt}}</span>
+
+                    <form action="/editView" method="POST">
+                        <div style="margin-left: 20px;">
+                            <input type="hidden" name="ID" value="{{.Post.ID}}">
+                            <input type="hidden" name="Name" value="{{.Post.Name}}">
+                            <input type="hidden" name="Post" value="{{.Post.Post}}">
+                            <button class="linkEdit" type="submit"><i class="fas fa-edit"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="name">{{.Post.Name}}</div>
+            <div class="body">{{.Post.Post}}</div>
+        </div>
+        {{end}}
+    </div>
+
+    <script>
+        function call() {
+        setTimeout(() => {
+            document.location.reload()
+        }, 5);
+        postFindQuery()
+
+        function postFindQuery() {
+            let findString = document.getElementById('findString').value;
+            fetch("/find/post", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(findString)
+            });
+        };
+    };
+    </script>
+</body>
+</html>
+{{end}}
+
+{{define "head"}}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css"/>
+    <link rel="stylesheet" href="/css/fontawesome-free-5.13.0-web/fontawesome-free-5.13.0-web/css/all.css"/>
+
+{{end}}
