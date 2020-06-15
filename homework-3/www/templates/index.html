@@ -1,14 +1,16 @@
 {{define "Blog"}}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>{{.Title}}</title>
     {{template "head"}}
 </head>
+
 <body>
     <nav class="menu">
         <div class="elem"><a href="/index">ЛОГОС</a></div>
-        <div class="elem"><a href="/create">СОЗДАТЬ ПОСТ</a></div>
+        <div class="elem"><a href="/createView">СОЗДАТЬ ПОСТ</a></div>
         <div class="elem"><a href="/find">АВТОРЫ</a></div>
     </nav>
     <h1>ЛОГОС</h1>
@@ -16,7 +18,7 @@
     <form onsubmit="call()">
         <div class="findString"> НАЙТИ ПОСТ:
             <input type="text" id="findString" name="Find" placeholder="Введите номер поста">
-           <button type="submit">Найти</button>
+            <button type="submit">Найти</button>
         </div>
     </form>
 
@@ -48,31 +50,32 @@
 
     <script>
         function call() {
-        setTimeout(() => {
-            document.location.reload()
-        }, 5);
-        postFindQuery()
+            setTimeout(() => {
+                document.location.reload()
+            }, 5);
+            postFindQuery()
 
-        function postFindQuery() {
-            let findString = document.getElementById('findString').value;
-            fetch("/find/post", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                },
-                body: JSON.stringify(findString)
-            });
+            function postFindQuery() {
+                let findString = document.getElementById('findString').value;
+                fetch("/find/post", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: JSON.stringify(findString)
+                });
+            };
         };
-    };
     </script>
 </body>
+
 </html>
 {{end}}
 
 {{define "head"}}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css"/>
-    <link rel="stylesheet" href="/css/fontawesome-free-5.13.0-web/fontawesome-free-5.13.0-web/css/all.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/fontawesome-free-5.13.0-web/fontawesome-free-5.13.0-web/css/all.css" />
 
 {{end}}

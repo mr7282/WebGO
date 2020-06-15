@@ -71,10 +71,6 @@ func (serv *Server) editView(wr http.ResponseWriter, r *http.Request) {
 	IDInput := r.PostFormValue("ID")
 	NameInput := r.PostFormValue("Name")
 	PostInput := r.PostFormValue("Post")
-	// conv, err := strconv.Atoi(r.PostFormValue("ID"))
-	// if err != nil {
-	// 	serv.lg.WithError(err).Warningln("can't conversion IDInput")
-	// }
 
 	type Posts struct {
 		ID   string
@@ -96,24 +92,24 @@ func (serv *Server) editView(wr http.ResponseWriter, r *http.Request) {
 func (serv *Server) editPost(wr http.ResponseWriter, r *http.Request) {
 	readResponse, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		serv.lg.WithError(err).Warningln("can't read response from browser")
+		serv.lg.WithError(err).Warningln("can't read response from edit.html")
 	}
 	defer r.Body.Close()
 
 	ctx := context.Background()
 
-	encodingResponse := models.Post{}
+	decodingResponse := models.Post{}
 
-	if err := json.Unmarshal(readResponse, &encodingResponse); err != nil {
-		serv.lg.WithError(err).Warningln("can't decoding response from browser")
+	if err := json.Unmarshal(readResponse, &decodingResponse); err != nil {
+		serv.lg.WithError(err).Warningln("can't decoding response from edit.html")
 	}
 
-	post, err := models.FindPost(ctx, serv.db, encodingResponse.ID, models.PostColumns.ID, models.PostColumns.Name, models.PostColumns.Post)
+	post, err := models.FindPost(ctx, serv.db, decodingResponse.ID, models.PostColumns.ID, models.PostColumns.Name, models.PostColumns.Post)
 	if err != nil {
 		serv.lg.WithError(err).Warningln("can't find post")
 	}
-	post.Name = encodingResponse.Name
-	post.Post = encodingResponse.Post
+	post.Name = decodingResponse.Name
+	post.Post = decodingResponse.Post
 
 	fmt.Println("IDInput^ ", post)
 	fmt.Printf("%T\n", post)
@@ -123,18 +119,45 @@ func (serv *Server) editPost(wr http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (serv *Server) findPost(wr http.ResponseWriter, r *http.Request) {
+// func (serv *Server) findPost(wr http.ResponseWriter, r *http.Request) {
 
+// 	readResponse, err := ioutil.ReadAll(r.Body)
+// 	if err != nil {
+// 		serv.lg.WithError(err).Warningln("can't read response from the browser")
+// 	}
+
+// 	var searchTarget string
+// 	if err := json.Unmarshal(readResponse, &searchTarget); err != nil {
+// 		serv.lg.WithError(err).Warningln("can't deencoding response from the browser")
+// 	}
+// }
+
+func (serv *Server) createView(wr http.ResponseWriter, r *http.Request) {
+ var tmpl = template.Must(template.New("MyBlog").ParseFiles("./www/templates/create.html"))
+
+ if err := tmpl.ExecuteTemplate(wr, "Blog", nil); err != nil {
+	 serv.lg.WithError(err).Warningln("can't show create.html")
+ }
+}
+
+func (serv *Server) createPost(wr http.ResponseWriter, r *http.Request) {
 	readResponse, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		serv.lg.WithError(err).Warningln("can't read response from the browser")
+		serv.lg.WithError(err).Warningln("can't read response from create.html")
+	}
+	defer r.Body.Close()
+
+	ctx := context.Background()
+
+	decodingResponse := models.Post{}
+	decodingResponse.UserID = 3
+
+
+	if err := json.Unmarshal(readResponse, &decodingResponse); err != nil {
+		serv.lg.WithError(err).Warningln("can't unmarshal response from create.html")
 	}
 
-	var searchTarget string
-	if err := json.Unmarshal(readResponse, &searchTarget); err != nil {
-		serv.lg.WithError(err).Warningln("can't deencoding response from the browser")
+	if err = decodingResponse.Insert(ctx, serv.db, boil.Whitelist(models.PostColumns.Name, models.PostColumns.Post, models.PostColumns.UserID)); err!= nil {
+		serv.lg.WithError(err).Warningln("can't insert new row in database")
 	}
-
-	// serv.lg.Infoln(readResponse)
-	// serv.lg.Infoln(searchTarget)
 }
